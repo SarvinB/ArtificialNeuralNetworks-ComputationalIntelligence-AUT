@@ -14,8 +14,13 @@ class BinaryCrossEntropy:
                 binary cross entropy loss
         """
         # TODO: Implement binary cross entropy loss
-        batch_size = None
-        cost = None
+        # batch_size = y.shape[0]
+        # cost = ((1-y) * np.log(1-y_hat + 1e-7) + y * np.log(y_hat + 1e-7))
+        # # return np.squeeze(cost)
+        # return -np.mean(cost, axis=0)
+        y_pred = np.clip(y_hat, 1e-7, 1 - 1e-7)
+        batch_size = y.shape[0]
+        cost = -np.mean((1-y) * np.log(1-y_pred + 1e-7)+y * np.log(y_pred + 1e-7), axis=0)
         return np.squeeze(cost)
 
     def backward(self, y_hat: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -29,5 +34,5 @@ class BinaryCrossEntropy:
         """
         # hint: use the np.divide function
         # TODO: Implement backward pass for binary cross entropy loss
-        return None
-
+        y_hat = np.clip(y_hat, 1e-7, 1 - 1e-7)
+        return np.mean((-1*y/ (y_hat + 1e-7) + (1-y)/(1-y_hat + 1e-7)))
